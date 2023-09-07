@@ -1,4 +1,4 @@
-i## Resource group creation
+## Resource group creation
 resource "azurerm_resource_group" "nonprod" {
   name     = "prod-azuregroup"
   location = "eastus"
