@@ -49,6 +49,7 @@ resource "azurerm_public_ip_prefix" "iprefix" {
   zones               = ["1"]
 }
 
+## NAT Gateway creation
 resource "azurerm_nat_gateway" "hubngw" {
   name                    = "nat-Gateway"
   location                = azurerm_resource_group.hubgroup.location
