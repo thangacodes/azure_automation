@@ -1,0 +1,3 @@
+This is storage account in Azure Cloud.
+Microsoft Azure, often referred to as Azure, is a cloud computing platform run by Microsoft. 
+It offers access, management, and the development of applications and services through global data centers.
