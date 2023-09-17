@@ -32,10 +32,12 @@ locals {
 
 ### local variables for vnet,subnet ip ranges
 locals {
-  vnetip          = "192.168.0.0/16"
-  vnetname        = "Blackstone-Network"
-  private_subneta = "192.168.1.0/24"
-  private_subnetb = "192.168.2.0/24"
-  public_subneta  = "192.168.3.0/24"
-  public_subnetb  = "192.168.4.0/24"
+  ipranges = {
+    vnetip          = "192.168.0.0/16"
+    vnetname        = "Blackstone-Network"
+    private_subneta = "192.168.1.0/24"
+    private_subnetb = "192.168.2.0/24"
+    public_subneta  = "192.168.3.0/24"
+    public_subnetb  = "192.168.4.0/24"
+  }
 }
