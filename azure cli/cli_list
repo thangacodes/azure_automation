@@ -1,0 +1,10 @@
+## This page will describe about all azure cli commands
+az login
+az account show --output table
+az account get-access-token
+az vm list
+az vm get-instance-view --resource-group learning-azure --name automation
+az vm get-instance-view -g learning-azure -n automation  // g-denotes resourcegroup && n- denotes name as short form
+az vm list -g learning-azure -d                         //List all VMs by resource group with details.
+az vm list -g learning-azure                           //List all VMs by resource group.
+az vm list-sizes -l eastus                            //List the available VM sizes in the east US region
