@@ -1,0 +1,23 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {},
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "Learn-rgp",
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2022-09-01",
+            "location": "eastus",
+            "dependsOn": [],
+            "tags": {
+                "Name": "Learn-rgp",
+                "CreationDate": "06/02/2024",
+                "Owner": "thangadurai.murugan@example.com",
+                "Environment":"Sandbox"
+            }
+        }
+    ],
+    "outputs": {}
+}
