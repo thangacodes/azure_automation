@@ -7,7 +7,7 @@
 #######################################################
 
 Write-Host "Script to login Azure account using PowerShell"  -BackgroundColor Black -ForegroundColor Red
-$tenant_id = "14dcfee2-b365-4413-bac2-b4e8cb470795"
+$tenant_id = ""
 $login=az login --tenant $tenant_id
 Write-Output $login
 Start-Sleep 2
