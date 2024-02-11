@@ -12,3 +12,5 @@ $login= az login --tenant $tenant_id
 Write-Output $login
 Start-Sleep 2
 Write-Host "Azure login is succeed" -BackgroundColor Black -ForegroundColor Red
+
+Please note, Azure Tenant Id is nothing but it is Azure Active Directory Id.
