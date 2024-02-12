@@ -24,4 +24,4 @@ Connect-AzAccount -ServicePrincipal -Credential $CREDENTIAL -Tenant $TENANTID
 New-AzResourceGroup -Name $RGP_NAME -Location $LOCATION
 
 ## Note: In this script, we've already created a dedicated appId in Azure account and then given proper permission to the subscription.
-## This is like create a dedicated app account using which you can interact with Azure cloud, not the root account.
+## This is like create a dedicated app account using which you can interact with Azure cloud, not the root account. This method called Service Principal via connecting azure cloud
