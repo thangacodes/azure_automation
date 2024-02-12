@@ -1,10 +1,10 @@
-#######################################################
-# Script: Azure ResourceGroup creation via PowerShell #
-# Author: Thangadurai, Murugan                        #
-# CreationDate: 11/02/2024                            #
-# Environment: Sandbox                                #
-# Contact: thangadurai.murugan@example.com            #
-#######################################################
+#################################################################################################
+# Script: Azure ResourceGroup creation via PowerShell                                           #
+# Author: Thangadurai, Murugan                                                                  #
+# CreationDate: 11/02/2024                                                                      #
+# Environment: Sandbox                                                                          #
+# Contact: thangadurai.murugan@example.com                                                      #
+#################################################################################################
 Write-Host -ForegroundColor red -BackgroundColor Yellow "Script to create resource group in Azure Cloud"
 $rgp_name = Read-Host "Please enter the resource group that you wanted to create:"
 Write-Host "The entered ResoruceGroup name is:" -BackgroundColor Black -ForegroundColor Red $rgp_name
