@@ -1,0 +1,45 @@
+trigger:
+  branches:
+    include:
+      - main
+      - master
+pr:
+  branches:
+    include:
+      - main
+      - master
+
+variables:
+  script_path: azure_tf/azure_vnet_subnets
+  tfinit: terraform init
+  tffmt: terraform fmt --recursive
+  tfvalidate: terraform validate
+  tfplan: terraform plan
+  tfapply: terraform apply --auto-approve
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - checkout: self  # Checkout the repo to the pipeline agent
+  - script: |
+      echo "Checking out to the $(script_path) directory..."
+      cd $(script_path) || exit 1 
+      echo "Changed to $(script_path) directory"
+    displayName: 'Navigate to azure_vnet_subnets Directory'
+  - script: |
+      echo "Installing Terraform..."
+      wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      sudo apt update && sudo apt install -y terraform
+    displayName: 'Install and configure Terraform'
+  - script: |
+      echo "Initializing Terraform..."
+      $(tfinit)
+      echo "Validating Terraform configuration..."
+      $(tfvalidate)
+      echo "Running Terraform plan..."
+      $(tfplan)
+      echo "Running Terraform apply..."
+      $(tfapply)
+    displayName: 'Run Terraform Commands'
