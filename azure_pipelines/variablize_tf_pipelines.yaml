@@ -26,7 +26,8 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  - checkout: self  # Checkout the repo to the pipeline agent
+  # Checkout the repo to the pipeline agent
+  - checkout: self  
   - script: |
       echo "Checking out to the $(script_path) directory..."
       $(change_dir_command)
