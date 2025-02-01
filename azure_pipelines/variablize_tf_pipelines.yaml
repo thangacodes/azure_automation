@@ -8,7 +8,6 @@ pr:
     include:
       - main
       - master
-
 variables:
   script_path: azure_tf/azure_vnet_subnets
   tfinit: terraform init
@@ -16,24 +15,35 @@ variables:
   tfvalidate: terraform validate
   tfplan: terraform plan
   tfapply: terraform apply --auto-approve
+  tf_download: https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+  terraform_source: https://apt.releases.hashicorp.com
+  terraform_deb: "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] $(terraform_source) $(lsb_release -cs) main"
+  apt_update_command: sudo apt update
+  apt_install_terraform: sudo apt install -y terraform
+  change_dir_command: cd $(script_path) || exit 1
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  - checkout: self  # Checkout the repo to the pipeline agent
+  # Checkout the repo to the pipeline agent
+  - checkout: self  
   - script: |
       echo "Checking out to the $(script_path) directory..."
-      cd $(script_path) || exit 1 
+      $(change_dir_command)
       echo "Changed to $(script_path) directory"
     displayName: 'Navigate to azure_vnet_subnets Directory'
   - script: |
       echo "Installing Terraform..."
-      wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-      echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-      sudo apt update && sudo apt install -y terraform
+      wget -O - $(tf_download)
+      echo "$(terraform_deb)" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      $(apt_update_command) && $(apt_install_terraform)
     displayName: 'Install and configure Terraform'
   - script: |
+    read -p "Do you want to proceed with running Terraform commands? (yes/no): " user_input
+    echo "User has given input feed as: "$user_input"
+    sleep 2
+    if [[ "$user_input" == "yes" || "$user_input" == "y" ]]; then
       echo "Initializing Terraform..."
       $(tfinit)
       echo "Validating Terraform configuration..."
@@ -42,4 +52,8 @@ steps:
       $(tfplan)
       echo "Running Terraform apply..."
       $(tfapply)
-    displayName: 'Run Terraform Commands'
+    else
+      echo "Terraform operations aborted by the user."
+      exit 0
+    fi
+  displayName: 'Run Terraform Commands'
