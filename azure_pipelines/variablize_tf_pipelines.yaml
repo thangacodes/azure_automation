@@ -26,8 +26,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-  # Checkout the repo to the pipeline agent
-  - checkout: self  
+  - checkout: self  # Checkout the repo to the pipeline agent
   - script: |
       echo "Checking out to the $(script_path) directory..."
       $(change_dir_command)
@@ -40,10 +39,10 @@ steps:
       $(apt_update_command) && $(apt_install_terraform)
     displayName: 'Install and configure Terraform'
   - script: |
-    read -p "Do you want to proceed with running Terraform commands? (yes/no): " user_input
-    echo "User has given input feed as: "$user_input"
-    sleep 2
-    if [[ "$user_input" == "yes" || "$user_input" == "y" ]]; then
+      read -p "Do you want to proceed with running Terraform commands? (yes/no): " user_input
+      echo "User has given input feed as: "$user_input"
+      sleep 2
+      if [[ "$user_input" == "yes" || "$user_input" == "y" ]]; then
       echo "Initializing Terraform..."
       $(tfinit)
       echo "Validating Terraform configuration..."
@@ -52,8 +51,8 @@ steps:
       $(tfplan)
       echo "Running Terraform apply..."
       $(tfapply)
-    else
+      else
       echo "Terraform operations aborted by the user."
       exit 0
-    fi
-  displayName: 'Run Terraform Commands'
+      fi
+    displayName: 'Run Terraform Commands'
