@@ -7,3 +7,5 @@ Terraform by Hashicorp (IaC)
 PowerShell
 
 Bash/Shell
+
+Azure DevOps pipelines
