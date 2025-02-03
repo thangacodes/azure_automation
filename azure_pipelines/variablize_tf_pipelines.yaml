@@ -69,6 +69,11 @@ stages:
               exit 0
               fi
             displayName: 'Run Terraform Commands'
+    approvals:
+      approvals:
+        - approvalType: Manual
+        - approvers: 
+            - $(approver)
   - stage: stage
     displayName: 'Deploy to Stage'
     dependsOn: dev
