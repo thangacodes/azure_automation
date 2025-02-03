@@ -1,3 +1,4 @@
+---
 trigger:
   branches:
     include:
@@ -21,39 +22,116 @@ variables:
   apt_update_command: sudo apt update
   apt_install_terraform: sudo apt install -y terraform
   change_dir_command: cd $(script_path) || exit 1
-
+  approver: admin@try-devops.xyz
+  Infradeployment: 'ubuntu-latest'
+  
 pool:
-  vmImage: 'ubuntu-latest'
-
-steps:
-  # Checkout the repo to the pipeline agent
-  - checkout: self  
-  - script: |
-      echo "Checking out to the $(script_path) directory..."
-      $(change_dir_command)
-      echo "Changed to $(script_path) directory"
-    displayName: 'Navigate to azure_vnet_subnets Directory'
-  - script: |
-      echo "Installing Terraform..."
-      wget -O - $(tf_download)
-      echo "$(terraform_deb)" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-      $(apt_update_command) && $(apt_install_terraform)
-    displayName: 'Install and configure Terraform'
-  - script: |
-      read -p "Do you want to proceed with running Terraform commands? (yes/no): " user_input
-      echo "User has given input feed as: "$user_input"
-      sleep 2
-      if [[ "$user_input" == "yes" || "$user_input" == "y" ]]; then
-      echo "Initializing Terraform..."
-      $(tfinit)
-      echo "Validating Terraform configuration..."
-      $(tfvalidate)
-      echo "Running Terraform plan..."
-      $(tfplan)
-      echo "Running Terraform apply..."
-      $(tfapply)
-      else
-      echo "Terraform operations aborted by the user."
-      exit 0
-      fi
-    displayName: 'Run Terraform Commands'
+  Infradeployment: 'ubuntu-latest'
+stages:
+  - stage: dev
+    displayName: 'Deploy to Dev'
+    jobs:
+      - job: Terraform_Dev
+        displayName: 'Run Terraform in Dev'
+        pool:
+          vmImage: $(Infradeployment)
+        environment: 
+          name: 'dev'   
+          resourceType: 'VirtualMachine'
+        steps:
+          - checkout: self  
+          - script: |
+              echo "Checking out to the $(script_path) directory..."
+              $(change_dir_command)
+              echo "Changed to $(script_path) directory"
+            displayName: 'Navigate to azure_vnet_subnets Directory'
+          - script: |
+              echo "Installing Terraform..."
+              wget -O - $(tf_download)
+              echo "$(terraform_deb)" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+              $(apt_update_command) && $(apt_install_terraform)
+            displayName: 'Install and configure Terraform'
+          - script: |
+              read -p "Do you want to proceed with running Terraform commands? (yes/no): " user_input
+              echo "User has given input feed as: "$user_input"
+              sleep 2
+              if [[ "$user_input" == "yes" || "$user_input" == "y" ]]; then
+              echo "Initializing Terraform..."
+              $(tfinit)
+              echo "Validating Terraform configuration..."
+              $(tfvalidate)
+              echo "Running Terraform plan..."
+              $(tfplan)
+              echo "Running Terraform apply..."
+              $(tfapply)
+              else
+              echo "Terraform operations aborted by the user."
+              exit 0
+              fi
+            displayName: 'Run Terraform Commands'
+  - stage: stage
+    displayName: 'Deploy to Stage'
+    dependsOn: dev
+    condition: succeeded()
+    jobs:
+      - job: Terraform_Stage
+        displayName: 'Run Terraform in Stage'
+        pool:
+          vmImage: $(Infradeployment)
+        environment:
+          name: 'stage'
+          resourceType: 'VirtualMachine'
+        steps:
+          - script: |
+              echo "Running Terraform apply for Stage..."
+              $(tfapply)
+            displayName: 'Run Terraform Commands'
+    approvals:
+      approvals:
+        - approvalType: Manual
+        - approvers: 
+            - $(approver)
+  - stage: ppe
+    displayName: 'Promoting to pre-prod'
+    dependsOn: stage
+    condition: succeeded()
+    jobs:
+      - job: Ter
+        displayName: 'Run Terraform in Pre-Prod'
+        pool:
+          vmImage: $(Infradeployment)
+        environment:
+          name: 'pre-prod'
+          resourceType: 'VirtualMachine'
+        steps:
+          - script: |
+              echo "Running Terraform apply for Pre-Prod..."
+              $(tfapply)
+            displayName: 'Run Terraform Commands'
+    approvals:
+      approvals:
+        - approvalType: Manual 
+        - approvers: 
+            - $(approver)
+  - stage: Prod
+    displayName: 'promoting to Prod'
+    dependsOn: ppe
+    condition: succeeded()
+    jobs:
+      - job: Terraform_Prod
+        displayName: 'Run Terraform in Prod'
+        pool:
+          vmImage: $(Infradeployment)
+        environment:
+          name: 'prod'
+          resourceType: 'VirtualMachine'
+        steps:
+          - script: |
+              echo "Running Terraform apply for Prod..."
+              $(tfapply)
+            displayName: 'Run Terraform Commands'
+    approvals:
+      approvals:
+        - approvalType: Manual
+        - approvers: 
+            - $(approver)
