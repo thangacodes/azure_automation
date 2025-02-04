@@ -1,0 +1,34 @@
+trigger:
+- main
+
+jobs:
+  - job: UbuntuJob
+    pool:
+      vmImage: 'ubuntu-latest'  # Ubuntu VM image
+    steps:
+      - script: |
+          echo "This is my first Azure DevOps pipeline job on Ubuntu!"
+          echo "Learning Azure DevOps with Ubuntu is very useful!"
+        displayName: 'Run Ubuntu specific tasks'
+
+      - script: |
+          echo "Running more commands on Ubuntu"
+          sleep 2
+          me=$(whoami)
+          echo "Script is executed by: ${me}"
+          current_working_dir=$(pwd)
+          echo "You are currently working on the directory: ${current_working_dir}"
+        displayName: 'Run more Ubuntu specific tasks'
+
+  - job: WindowsJob
+    pool:
+      vmImage: 'windows-latest'  # Windows VM image
+    steps:
+      - script: |
+          echo "This is my first Azure DevOps pipeline job on Windows!"
+          echo "Learning Azure DevOps with Windows is very useful!"
+        displayName: 'Run Windows specific tasks'
+
+      - powershell: |
+          Write-Host "Azure DevOps on Windows is also super easy!"
+        displayName: 'Run PowerShell script on Windows'
