@@ -10,4 +10,4 @@ Bash/Shell to simplify login to Azure Cloud.
 Azure DevOps Pipelines for setting up a CI/CD approach.
 
 
-- **[Azure DevOps Pipelines](https://github.com/thangacodes/azure_automation/tree/main/azure_pipelines)** for setting up a CI/CD approach
+[Azure DevOps Pipelines](https://github.com/thangacodes/azure_automation/tree/main/azure_pipelines) for setting up a CI/CD approach
