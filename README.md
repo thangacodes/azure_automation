@@ -1,11 +1,11 @@
-# azure_automation
+```bash
 
-This repository contains Terraform (IaC)-based Azure Infra Provisioning code. I often utilize the scripting listed below:
+This repository contains Terraform-based Infrastructure as Code (IaC) for provisioning Azure infrastructure. The following scripting tools are commonly used by for the learnnig scope,
 
-Terraform by Hashicorp (IaC)
+Terraform by HashiCorp (IaC)
 
 PowerShell
 
 Bash/Shell
 
-Azure DevOps pipelines
+Azure DevOps Pipelines
